@@ -6,7 +6,7 @@ function ExpertReviews() {
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin")
+    fetch("https://secureguard-db2i.onrender.com/api/admin")
       .then((res) => res.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch((err) => console.error("❌ Грешка при зареждане на продукти:", err));
@@ -54,7 +54,7 @@ function ExpertReviews() {
                     ? product.ImageURL
                     : product.ImageURL?.startsWith("http")
                     ? product.ImageURL
-                    : `http://localhost:5000${product.ImageURL}`
+                    : `https://secureguard-db2i.onrender.com${product.ImageURL}`
                 }
                 alt={product.ProductName}
                 className="w-12 h-12 object-contain rounded"
