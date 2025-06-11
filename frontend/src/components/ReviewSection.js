@@ -14,7 +14,8 @@ export default function ReviewSection({ productId }) {
     setUser(userData);
     setIsAdmin(userData?.isAdmin === true);
 
-    fetch(`http://localhost:5000/api/reviews/${productId}`)
+    fetch(`https://secureguard-db2i.onrender.com/api/reviews/${productId}`)
+
       .then((res) => res.json())
       .then((data) => setReviews(data));
   }, [productId]);
@@ -24,7 +25,8 @@ export default function ReviewSection({ productId }) {
 
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:5000/api/reviews", {
+      const res = await fetch("https://secureguard-db2i.onrender.com/api/reviews"
+, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +51,8 @@ export default function ReviewSection({ productId }) {
     if (!token || !isAdmin) return;
 
     try {
-      await fetch(`http://localhost:5000/api/reviews/${id}`, {
+      await fetch(`https://secureguard-db2i.onrender.com/api/reviews/${id}`, {
+
         method: "DELETE",
         headers: { Authorization: "Bearer " + token },
       });

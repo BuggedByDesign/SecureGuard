@@ -9,7 +9,7 @@ export default function ProductDetails() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/admin/name/${name}`)
+    fetch(`https://secureguard-db2i.onrender.com/api/admin/name/${name}`)
       .then((res) => {
         if (!res.ok) throw new Error("Product not found.");
         return res.json();
@@ -20,7 +20,7 @@ export default function ProductDetails() {
         navigate("/");
       });
 
-    fetch(`http://localhost:5000/api/products/${name}/features`)
+    fetch(`https://secureguard-db2i.onrender.com/api/products/${name}/features`)
       .then((res) => res.json())
       .then((data) => setFeatures(data))
       .catch((err) =>

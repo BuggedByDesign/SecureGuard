@@ -9,7 +9,7 @@ function AntivirusListT() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin")
+    fetch("https://secureguard-db2i.onrender.com/api/admin")
       .then((res) => res.json())
       .then(async (data) => {
         const enriched = await Promise.all(

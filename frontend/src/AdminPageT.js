@@ -12,7 +12,8 @@ function AdminPage() {
   }, []);
 
   const fetchProducts = async () => {
-    const res = await fetch("http://localhost:5000/api/admin");
+    const res = await fetch("https://secureguard-db2i.onrender.com/api/admin")
+
     const data = await res.json();
     setProducts(data);
   };
@@ -49,8 +50,8 @@ function AdminPage() {
 
     const method = editing ? "PUT" : "POST";
     const url = editing
-      ? `http://localhost:5000/api/admin/${editing.ProductID}`
-      : "http://localhost:5000/api/admin";
+      ? `https://secureguard-db2i.onrender.com/api/admin/${editing.ProductID}`
+      : "https://secureguard-db2i.onrender.com/api/admin/";
 
     const res = await fetch(url, {
       method,
@@ -78,7 +79,7 @@ function AdminPage() {
   };
 
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:5000/api/admin/${id}`, { method: "DELETE" });
+    await fetch(`https://secureguard-db2i.onrender.com/api/admin/${id}`, { method: "DELETE" });
     fetchProducts();
   };
 
