@@ -1,0 +1,72 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Background and centering */
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #4a00e0, #8e2de2);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll; /* fixed може да създава проблеми */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #222;
+}
+
+/* Контейнер */
+.box {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Заглавие */
+.box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+/* Текст */
+.box p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Бутон линк */
+a.button {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #6c63ff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+a.button:hover {
+  background: #5548c8;
+  cursor: pointer;
+}
+
+/* Малък текст за пренасочване */
+.redirect {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: #888;
+  font-style: italic;
+}

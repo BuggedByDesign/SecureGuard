@@ -1,0 +1,157 @@
+import React, { useEffect, useState } from "react";
+import "./index.css";
+import AdminUsers from "./components/AdminUsers";
+import AdminReportedReviews from "./components/AdminReportedReviews";
+import AdminNews from "./components/AdminNews";
+import AdminStats from "./components/AdminStats";
+import AdminReportAbuse from "./components/AdminReportAbuse";
+import MostReportedUsers from "./components/MostReportedUsers";
+
+export default function AdminPageT() {
+  const [products, setProducts] = useState([]);
+  const [form, setForm] = useState({ name: "", description: "", price: "", discount: "", image: "" });
+  const [fileName, setFileName] = useState("");
+  const [editing, setEditing] = useState(null);
+  const [activeTab, setActiveTab] = useState("products");
+  const [showSubStats, setShowSubStats] = useState("site");
+
+  const authHeader = () => {
+    const token = localStorage.getItem("token");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/admin", {
+        headers: { "Content-Type": "application/json", ...authHeader() }
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setProducts(data);
+    } catch {
+      console.error("❌ Грешка при зареждане на продукти");
+    }
+  };
+
+  const convertToBase64 = file =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+
+  const handleImageChange = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const base64 = await convertToBase64(file);
+    setForm(f => ({ ...f, image: base64 }));
+    setFileName(file.name);
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if (!form.image) {
+      alert("Моля, качете изображение.");
+      return;
+    }
+
+    if (!window.confirm(editing ? "Наистина ли искате да обновите този продукт?" : "Наистина ли искате да добавите този продукт?")) return;
+
+    const method = editing ? "PUT" : "POST";
+    const url = editing
+      ? `http://localhost:5000/api/admin/${editing.ProductID}`
+      : "http://localhost:5000/api/admin/";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json", ...authHeader() },
+        body: JSON.stringify({
+          ...form,
+          discount: form.discount || 0
+        })
+      });
+      if (!res.ok) throw new Error();
+      setForm({ name: "", description: "", price: "", discount: "", image: "" });
+      setFileName("");
+      setEditing(null);
+      fetchProducts();
+    } catch {
+      alert("Грешка при запис на продукта.");
+    }
+  };
+
+  const handleEdit = p => {
+    setForm({
+      name: p.ProductName,
+      description: p.Description,
+      price: p.Price,
+      discount: p.Discount || "",
+      image: p.ImageURL
+    });
+    setFileName("(съществуващо изображение)");
+    setEditing(p);
+  };
+
+  const handleDelete = async id => {
+    if (!window.confirm("Наистина ли искате да изтриете този продукт?")) return;
+    try {
+      await fetch(`http://localhost:5000/api/admin/${id}`, {
+        method: "DELETE",
+        headers: authHeader()
+      });
+      fetchProducts();
+    } catch {
+      alert("Грешка при изтриване на продукта.");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] flex flex-col items-center text-white pt-28 px-6 pb-20">
+      <div className="sticky top-4 z-20 flex gap-4 mb-8">
+        {["products", "users", "reports", "news", "stats", "reportabuse"].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={\`px-5 py-2 rounded-xl text-sm font-semibold border shadow-md transition-all duration-300 \${activeTab === tab ? "bg-white text-black scale-105" : "bg-white/10 hover:bg-white/20 text-white/80"}\`}
+          >
+            {tab === "products" ? "🛍️ Products" :
+             tab === "users" ? "👥 Users" :
+             tab === "reports" ? "🚩 Reports" :
+             tab === "news" ? "📰 News" :
+             tab === "stats" ? "📊 Stats" :
+             "🛑 Report Abuse"}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "products" && (
+        <>
+          {/* Product Form and Table goes here */}
+        </>
+      )}
+      {activeTab === "users" && <AdminUsers />}
+      {activeTab === "reports" && <AdminReportedReviews />}
+      {activeTab === "news" && <AdminNews />}
+      {activeTab === "reportabuse" && <AdminReportAbuse />}
+      {activeTab === "stats" && (
+        <>
+          <div className="flex gap-3 mb-6">
+            <button onClick={() => setShowSubStats("site")} className={\`px-4 py-2 rounded \${showSubStats === "site" ? "bg-white text-black" : "bg-white/10 text-white"}\`}>📊 Site Statistics</button>
+            <button onClick={() => setShowSubStats("reported")} className={\`px-4 py-2 rounded \${showSubStats === "reported" ? "bg-white text-black" : "bg-white/10 text-white"}\`}>🛑 Most Reported Users</button>
+          </div>
+          {showSubStats === "site" ? <AdminStats /> : <MostReportedUsers />}
+        </>
+      )}
+    </div>
+  );
+}

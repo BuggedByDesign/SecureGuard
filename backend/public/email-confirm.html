@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="bg">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Имейл потвърден</title>
+    <link rel="stylesheet" href="/confirm.css" />
+  </head>
+  <body>
+    <div class="box fade-in">
+      <h2>Имейлът е потвърден успешно ✅</h2>
+      <p>Можете да продължите към вход.</p>
+      <a href="http://localhost:3000/login" class="button">Към входа</a>
+      <p class="redirect">Ще бъдете пренасочени към вход след 5 секунди...</p>
+    </div>
+
+    <script>
+      setTimeout(() => {
+        window.location.href = "http://localhost:3000/login";
+      }, 5000);
+    </script>
+  </body>
+</html>
